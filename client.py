@@ -41,7 +41,9 @@ def start():
             thread.join() # stop listening to server
             break
 
+
 def handle_receive():
+
     #continously receive from server
     while True:
         msg = receive()
@@ -52,6 +54,7 @@ def handle_receive():
             break
         if (msg == "SEND"): # server is sending file
             recieve_file()
+
 
 def recieve_file():
     # receive file name
@@ -71,7 +74,7 @@ def recieve_file():
     file.close()
 
 def send_file(filename):
-    send("SEND") #alert server file is being sent
+    send("SEND")  # tell server its going to send file
 
     #attempt to open the file
     try:
@@ -86,5 +89,6 @@ def send_file(filename):
 
     data = file.read() # get data from file
     client.sendall(data) # send data from file
+
 
 start()

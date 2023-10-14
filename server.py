@@ -49,11 +49,13 @@ def handle_send(conn, addr):
         except:
             break
 
+
 def start():
     serv.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
     conn, addr = serv.accept() #connect to new client
     print(f"[NEW CONNECTION] {addr} connected.")
+    CLIENT_CONNECTED = True
     handle_client(conn, addr)
 
 def close_client(conn, addr):
@@ -62,18 +64,19 @@ def close_client(conn, addr):
     print(f"[CONNECTION] {addr} disconnected.")
 
 def send_file(filename, conn):
-    send(conn, "SEND")
+    send(conn, "SEND") # tell client its going to send file
+    # attempt to open file
     try:
         file = open (filename, "rb")
     except:
         print("File not found")
         return
-    file_size = os.path.getsize(filename)
-    send(conn,(filename))
-    send(conn, str(file_size))
+    file_size = os.path.getsize(filename) # get file size
+    send(conn,(filename)) # send file name
+    send(conn, str(file_size)) # send file size
 
-    data = file.read()
-    conn.sendall(data)
+    data = file.read() # get data
+    conn.sendall(data) # send data
 
 def recieve_file(conn):
     # recieve file name
@@ -82,7 +85,7 @@ def recieve_file(conn):
 
     # recieve file size
     file_size = recieve(conn)
-    print(file_size + " bytes")
+    print(file_size + "bytes")
 
     file = open(file_name,"wb") # open file as write
     file_bytes = b"" # stores bytes
